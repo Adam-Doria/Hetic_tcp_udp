@@ -1,7 +1,7 @@
 import socket
 import json
 import time
-from test_py.game_state import GameState
+from game_state import GameState
 
 # Store connected clients and their paddles
 clients = {}
@@ -67,7 +67,7 @@ def start_server():
                     # Decode the JSON message
                     message = json.loads(data.decode())
                     msg_type = message["type"]
-                    print(f"Received {msg_type} from {client_address}")
+                    print(f"Received {msg_type} from {client_address}, {message}")
 
                     # Handle new connections
                     if msg_type == "connect":
@@ -113,7 +113,9 @@ def start_server():
                 except json.JSONDecodeError:
                     print(f"Invalid JSON from {client_address}")
                 except KeyError as e:
-                    print(f"Missing key in message from {client_address}: {e}")
+                    print(
+                        f"Missing key in message from {client_address}: {e}, {message}"
+                    )
 
             except socket.timeout:
                 pass  # No messages received this frame
@@ -136,6 +138,7 @@ def start_server():
                         "game_state": game_state.to_dict(),
                     }
                     disconnected = []
+                    print(f"Broadcasting game state: {state_update}")
                     for client in list(clients.keys()):
                         try:
                             server_socket.sendto(
