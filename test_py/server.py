@@ -35,7 +35,7 @@ def remove_client(client_address):
 
 def start_server():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    server_address = ("127.0.0.1", 9876)
+    server_address = ("192.168.2.65", 9876)
     server_socket.bind(server_address)
     server_socket.settimeout(0.016)  # 60 FPS timeout
 

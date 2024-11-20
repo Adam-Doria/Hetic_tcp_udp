@@ -1,0 +1,11 @@
+/.vscode/
+client/Library/
+client/obj/
+*.csproj
+*.sln
+client/Temp/
+client/.vs/
+client/Log/
+client/Logs/
+client/Build/
+client/UserSettings/
