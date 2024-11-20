@@ -6,6 +6,7 @@ using System.Threading;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
+
 public class GameState
 {
     public Ball ball;
@@ -31,10 +32,13 @@ public class PongNetworkManager : MonoBehaviour
     private UdpClient client;
     private IPEndPoint serverEndPoint;
     private Thread listenerThread;
-    private bool isRunning = true;
+    private bool isRunning = false;
     public int playerId;
     private GameState gameState;
     public string playerName = "Player";
+    private bool isConnected = false;
+  
+
 
     public static PongNetworkManager Instance { get; private set; }
 
@@ -44,7 +48,6 @@ public class PongNetworkManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            InitializeNetwork();
         }
         else
         {
@@ -52,49 +55,63 @@ public class PongNetworkManager : MonoBehaviour
         }
     }
 
-    void InitializeNetwork()
+    // Configures the manager with server IP, port, and player name, and initializes the connection
+    public void ConfigureAndConnect(string ip, int port)
     {
-        Debug.Log("Initializing network connection...");
+        if (isRunning)
+        {
+            Debug.LogWarning("Manager is already configured and running.");
+            return;
+        }
+
+        Debug.Log($"Setting up connection to {ip}:{port}");
+
         try
         {
             client = new UdpClient();
-            serverEndPoint = new IPEndPoint(IPAddress.Parse("192.168.2.65"), 9876);
+            serverEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
 
-            // Start listener thread
+            // Start the listener thread
+            isRunning = true;
             listenerThread = new Thread(new ThreadStart(ListenForMessages));
             listenerThread.IsBackground = true;
             listenerThread.Start();
 
-            // Send connect message
+            // Send a connect message to the server
             SendConnectMessage();
-            Debug.Log("Network initialization complete");
+            Debug.Log("Connection successfully initialized.");
         }
         catch (System.Exception e)
         {
-            Debug.LogError($"Failed to initialize network: {e.Message}");
+            Debug.LogError($"Error while configuring the connection: {e.Message}");
+            isRunning = false;
         }
     }
 
-    void SendConnectMessage()
+    // Sends a connect message to the server
+    private void SendConnectMessage()
     {
-        Debug.Log("Sending connect message...");
+        if (client == null || serverEndPoint == null) return;
+
+        Debug.Log("Sending connection message...");
         try
         {
             var connectMessage = new { type = "connect", name = playerName };
             string jsonMessage = JsonConvert.SerializeObject(connectMessage);
             byte[] data = Encoding.UTF8.GetBytes(jsonMessage);
             client.Send(data, data.Length, serverEndPoint);
-            Debug.Log("Connect message sent successfully");
+            Debug.Log("Connection message sent.");
         }
         catch (System.Exception e)
         {
-            Debug.LogError($"Failed to send connect message: {e.Message}");
+            Debug.LogError($"Error sending connection message: {e.Message}");
         }
     }
 
-    void ListenForMessages()
+    // Listens for incoming messages from the server
+    private void ListenForMessages()
     {
-        Debug.Log("Started listening for messages...");
+        Debug.Log("Listener thread started...");
         while (isRunning)
         {
             try
@@ -102,14 +119,16 @@ public class PongNetworkManager : MonoBehaviour
                 IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, 0);
                 byte[] data = client.Receive(ref remoteEP);
                 string message = Encoding.UTF8.GetString(data);
-                Debug.Log($"Received message: {message}");
+                // Debug.Log($"Received message: {message}");
 
                 var response = JsonConvert.DeserializeObject<Dictionary<string, object>>(message);
 
                 if (response["type"].ToString() == "init")
                 {
+                    Debug.Log("Received init message from server");
                     playerId = int.Parse(response["player_id"].ToString());
                     gameState = JsonConvert.DeserializeObject<GameState>(response["game_state"].ToString());
+                    isConnected = true;
                     Debug.Log($"Initialized as player {playerId}");
                 }
                 else if (response["type"].ToString() == "game_state")
@@ -125,6 +144,7 @@ public class PongNetworkManager : MonoBehaviour
         }
     }
 
+    // Sends an update for the paddle's position to the server
     public void SendPaddleUpdate(float yPos)
     {
         if (client == null) return;
@@ -138,15 +158,24 @@ public class PongNetworkManager : MonoBehaviour
         }
         catch (System.Exception e)
         {
-            Debug.LogError($"Failed to send paddle update: {e.Message}");
+            Debug.LogError($"Error sending paddle update: {e.Message}");
         }
     }
 
+    // Returns the current game state
     public GameState GetGameState()
     {
         return gameState;
     }
 
+    public bool IsConnected()
+    {
+        return isConnected;
+    }
+
+
+
+    // Cleans up the network connection and stops the listener thread
     void OnDestroy()
     {
         Debug.Log("Cleaning up network connection...");
@@ -159,11 +188,5 @@ public class PongNetworkManager : MonoBehaviour
         {
             listenerThread.Join();
         }
-    }
-
-    // Add this to check if we're properly connected
-    public bool IsConnected()
-    {
-        return gameState != null && playerId != 0;
     }
 }

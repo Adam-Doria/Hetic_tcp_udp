@@ -1,7 +1,7 @@
 import socket
 import json
 import time
-from test_py.game_state import GameState
+from game_state import GameState
 
 # Store connected clients and their paddles
 clients = {}
@@ -35,7 +35,7 @@ def remove_client(client_address):
 
 def start_server():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    server_address = ("192.168.2.65", 9876)
+    server_address = ("127.0.0.1", 9876)
     server_socket.bind(server_address)
     server_socket.settimeout(0.016)  # 60 FPS timeout
 
@@ -83,7 +83,9 @@ def start_server():
                                     "name": message["name"],
                                 }
                                 game_state.add_player(player_id, message["name"])
-
+                                
+                                print(f"Player {player_id} ({message['name']}) added to game state")
+                                
                                 # Handle bot
                                 if len(clients) == 1:
                                     game_state.activate_bot()
@@ -96,6 +98,9 @@ def start_server():
                                     "player_id": player_id,
                                     "game_state": game_state.to_dict(),
                                 }
+                                
+                                print(f"Sending init response to {client_address}: {response}")
+
                                 server_socket.sendto(
                                     json.dumps(response).encode(), client_address
                                 )
