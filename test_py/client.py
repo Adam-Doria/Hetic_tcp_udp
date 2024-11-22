@@ -17,7 +17,7 @@ BLACK = (0, 0, 0)
 class GameClient:
     def __init__(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.server_address = ("127.0.0.1", 9876)
+        self.server_address = ("192.168.2.65", 9876)
         self.player_id = None
         self.game_state = None
         self.connected = False

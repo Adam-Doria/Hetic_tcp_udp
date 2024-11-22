@@ -1,34 +1,74 @@
 using UnityEngine;
 
+public enum PongBallState {
+  Playing = 0,
+  PlayerLeftWin = 1,
+  PlayerRightWin = 2,
+}
+
 public class PongBall : MonoBehaviour
 {
-  PongNetworkManager networkManager;
+    public float Speed = 1;
 
-  // Server's screen dimensions
-  private const float SERVER_WIDTH = 800f;
-  private const float SERVER_HEIGHT = 600f;
+    Vector3 Direction;
+    PongBallState _State = PongBallState.Playing;
 
-  void Start()
-  {
-    networkManager = PongNetworkManager.Instance;
-  }
+    public PongBallState State {
+      get {
+        return _State;
+      }
+    } 
 
-  void Update()
-  {
-    if (networkManager == null) return;
+    void Awake() {
+      if (!Globals.IsServer) {
+        enabled = false;
+      }
 
-    var gameState = networkManager.GetGameState();
-    if (gameState != null && gameState.ball != null)
-    {
-      // Convert server coordinates to Unity coordinates
-      float unityX = (gameState.ball.x - SERVER_WIDTH / 2) / (SERVER_WIDTH / 2) * 8; // 8 is Unity's width
-      float unityY = (gameState.ball.y - SERVER_HEIGHT / 2) / (SERVER_HEIGHT / 2) * 4; // 4 is Unity's height
-
-      transform.position = new Vector3(
-          unityX,
-          unityY,
-          transform.position.z
-      );
     }
-  }
+
+    void Start() {
+      Direction = new Vector3(
+        Random.Range(0.5f, 1),
+        Random.Range(-0.5f, 0.5f),
+        0
+      );
+      Direction.x *= Mathf.Sign(Random.Range(-100, 100));
+      Direction.Normalize();
+    }
+
+    void Update() {
+      if (State != PongBallState.Playing) {
+        return;
+      }
+
+      transform.position = transform.position + (Direction * Speed * Time.deltaTime);
+    }
+
+    void OnCollisionEnter(Collision c) {
+      switch (c.collider.name) {
+        case "BoundTop":
+        case "BoundBottom":
+          Direction.y = -Direction.y;
+          break;
+
+        case "PaddleLeft":
+        case "PaddleRight":
+        case "BoundLeft":
+        case "BoundRight":
+          Direction.x = -Direction.x;
+          break;
+
+        /*
+        case "BoundLeft":
+          _State = PongBallState.PlayerRightWin;
+          break;
+
+        case "BoundRight":
+          _State = PongBallState.PlayerLeftWin;
+          break;
+        */
+
+      }
+    }
+
 }
