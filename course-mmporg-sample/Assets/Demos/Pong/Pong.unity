@@ -1279,6 +1279,8 @@ GameObject:
   - component: {fileID: 807978584}
   - component: {fileID: 807978588}
   - component: {fileID: 807978589}
+  - component: {fileID: 807978591}
+  - component: {fileID: 807978590}
   m_Layer: 0
   m_Name: PaddleRight
   m_TagString: Untagged
@@ -1418,6 +1420,32 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &807978590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 807978583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c60a872d3b76ef9de9fa3a46a3e13e67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Paddle: {fileID: 807978588}
+--- !u!114 &807978591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 807978583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c5beb570c05b0151ab3d345f5718e25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Paddle: {fileID: 807978588}
 --- !u!1 &814606652
 GameObject:
   m_ObjectHideFlags: 0
@@ -1432,6 +1460,8 @@ GameObject:
   - component: {fileID: 814606653}
   - component: {fileID: 814606657}
   - component: {fileID: 814606658}
+  - component: {fileID: 814606660}
+  - component: {fileID: 814606661}
   m_Layer: 0
   m_Name: PaddleLeft
   m_TagString: Untagged
@@ -1571,6 +1601,32 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &814606660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 814606652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c5beb570c05b0151ab3d345f5718e25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Paddle: {fileID: 814606657}
+--- !u!114 &814606661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 814606652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c60a872d3b76ef9de9fa3a46a3e13e67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Paddle: {fileID: 814606657}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
