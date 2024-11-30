@@ -48,9 +48,9 @@ public class ConnectionUI : MonoBehaviour
         {
         yield return null; // Wait until the next frame
         }
-         Debug.Log("HIDE3 ");
-    Debug.Log("Connected! Starting the game...");
-    HideUI();
+        Debug.Log("HIDE3 ");
+        Debug.Log("Connected! Starting the game...");
+        HideUI();
     }
     void HideUI()
     {
