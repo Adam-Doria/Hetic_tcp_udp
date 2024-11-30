@@ -5,6 +5,10 @@ public enum PongPlayer {
   PlayerLeft = 1,
   PlayerRight = 2
 }
+[System.Serializable]
+public class PaddleState {
+    public Vector3 Position;
+}
 
 public class PongPaddle : MonoBehaviour
 { 
@@ -36,6 +40,10 @@ public class PongPaddle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+          if (!Globals.IsServer && Player != Globals.LocalPlayer) {
+        return; 
+    }
+    
       float direction = PlayerAction.ReadValue<float>();
 
       Vector3 newPos = transform.position + (Vector3.up * Speed * direction * Time.deltaTime);
