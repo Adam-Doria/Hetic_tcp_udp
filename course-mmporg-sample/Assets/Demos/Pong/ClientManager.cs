@@ -25,10 +25,20 @@ public class ClientManager : MonoBehaviour
         ServerEndpoint = new IPEndPoint(IPAddress.Parse(ServerIP), ServerPort);
             
         UDP.OnMessageReceived += (string message, IPEndPoint sender) => {
-            Debug.Log("[CLIENT] Message received from " + 
-                sender.Address.ToString() + ":" + sender.Port 
-                + " =>" + message);
-        };
+            Debug.Log("[CLIENT] Message received from " + sender.Address.ToString() + ":" + sender.Port + " => " + message);
+
+            if (message.StartsWith("welcome")) {
+                string[] tokens = message.Split('|');
+                if (tokens.Length > 1) {
+                    string teamStr = tokens[1];
+                    PongPlayer assignedTeam;
+                    if (System.Enum.TryParse(teamStr, out assignedTeam)) {
+                        Globals.LocalPlayer = assignedTeam;
+                        Debug.Log("Assigned to team " + assignedTeam);
+                    }
+                }
+            }
+        };  
     }
 
     // Update is called once per frame

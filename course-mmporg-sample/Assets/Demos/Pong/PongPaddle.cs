@@ -40,16 +40,17 @@ public class PongPaddle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-          if (!Globals.IsServer && Player != Globals.LocalPlayer) {
-        return; 
-    }
-    
-      float direction = PlayerAction.ReadValue<float>();
+        // Only allow control if this is the local player's paddle
+        if (!Globals.IsServer && Player != Globals.LocalPlayer) {
+            return;
+        }
 
-      Vector3 newPos = transform.position + (Vector3.up * Speed * direction * Time.deltaTime);
-      newPos.y = Mathf.Clamp(newPos.y, MinY, MaxY);
+        float direction = PlayerAction.ReadValue<float>();
 
-      transform.position = newPos;
+        Vector3 newPos = transform.position + (Vector3.up * Speed * direction * Time.deltaTime);
+        newPos.y = Mathf.Clamp(newPos.y, MinY, MaxY);
+
+        transform.position = newPos;
     }
 
     void OnDisable() {
