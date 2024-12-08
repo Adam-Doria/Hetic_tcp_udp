@@ -9,6 +9,8 @@ public class ClientManager : MonoBehaviour
 
     private float NextCoucouTimeout = -1;
     private IPEndPoint ServerEndpoint;
+    public PlayerCountDisplay PlayerCountDisplay;
+
 
     void Awake() {
         // Desactiver mon objet si je ne suis pas le client
@@ -37,6 +39,16 @@ public class ClientManager : MonoBehaviour
                         Debug.Log("Assigned to team " + assignedTeam);
                     }
                 }
+            } else if (message.StartsWith("PLAYER_COUNT")) {
+                string[] tokens = message.Split('|');
+                if (tokens.Length >= 3) {
+                    int leftTeamCount;
+                    int rightTeamCount;
+                    if (int.TryParse(tokens[1], out leftTeamCount) && int.TryParse(tokens[2], out rightTeamCount)) {
+                        Debug.Log($"[CLIENT] Updating player counts - Left: {leftTeamCount}, Right: {rightTeamCount}");
+                        PlayerCountDisplay.UpdatePlayerCounts(leftTeamCount, rightTeamCount);
+                    }
+                }
             }
         };  
     }
@@ -48,5 +60,9 @@ public class ClientManager : MonoBehaviour
             UDP.SendUDPMessage("coucou", ServerEndpoint);
             NextCoucouTimeout = Time.time + 0.5f;
         }
+    }
+
+    void OnApplicationQuit() {
+        UDP.SendUDPMessage("DISCONNECT", ServerEndpoint);
     }
 }

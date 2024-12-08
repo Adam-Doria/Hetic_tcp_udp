@@ -15,7 +15,7 @@ public class InputSenderClient : MonoBehaviour
         ServerEndpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 25000); // Replace with your server IP and port
 
         inputActions = new PongInput();
-        PlayerAction = inputActions.Pong.Player1; // Adjust if necessary
+        PlayerAction = inputActions.Pong.Player1;
         PlayerAction.Enable();
     }
 

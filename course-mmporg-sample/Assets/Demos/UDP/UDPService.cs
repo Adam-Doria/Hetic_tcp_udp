@@ -92,7 +92,7 @@ public class UDPService : MonoBehaviour
 
     private void ParseString(byte[] bytes, IPEndPoint sender) {
         string message = System.Text.Encoding.UTF8.GetString(bytes);
-        OnMessageReceived.Invoke(message, sender);
+        OnMessageReceived?.Invoke(message, sender);
     }
 
     public void SendUDPMessage(string message, IPEndPoint destination) {
