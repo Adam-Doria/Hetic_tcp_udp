@@ -10,9 +10,9 @@ public class ClientManager : MonoBehaviour
     private float NextCoucouTimeout = -1;
     private IPEndPoint ServerEndpoint;
     public PlayerCountDisplay PlayerCountDisplay;
-
+ 
     //public bool leftOrRight = true;
-
+    
 
     void Awake() {
         // Desactiver mon objet si je ne suis pas le client
@@ -51,9 +51,31 @@ public class ClientManager : MonoBehaviour
                         PlayerCountDisplay.UpdatePlayerCounts(leftTeamCount, rightTeamCount);
                     }
                 }
+            } else if (message.StartsWith("SCORE_UPDATE")) {
+                 string[] tokens = message.Split('|');
+                if (tokens.Length >= 3) {
+                    int leftTeamScore;
+                    int rightTeamScore;
+                    if (int.TryParse(tokens[1], out leftTeamScore) && int.TryParse(tokens[2], out rightTeamScore)) {
+                        Debug.Log($"[CLIENT] Updating player Scores - Left: {leftTeamScore}, Right: {rightTeamScore}");
+                        PlayerCountDisplay.UpdatePlayerScores(leftTeamScore, rightTeamScore);
+                    }
+                }
+            }else if (message.StartsWith("GAME_OVER")) {
+                 string[] tokens = message.Split('|');
+                    if (tokens.Length > 1) {
+                        string winner = tokens[1];
+                        Debug.Log($"[CLIENT] winner: {winner}");
+                        PongBallState newState = (winner == "PlayerLeft") ? PongBallState.PlayerLeftWin : PongBallState.PlayerRightWin;
+                        PongBall ball = FindObjectOfType<PongBall>(); 
+                        if (ball != null) {
+                            ball.SetState(newState);
+                        }
+                    }
             }
-        };  
+        };
     }
+    
 
     // Update is called once per frame
     void Update()
@@ -63,7 +85,7 @@ public class ClientManager : MonoBehaviour
             NextCoucouTimeout = Time.time + 0.5f;
         }
     }
-
+    
     void OnApplicationQuit() {
         UDP.SendUDPMessage("DISCONNECT", ServerEndpoint);
     }

@@ -38,7 +38,7 @@ public class ServerManager : MonoBehaviour
                 string addr = sender.Address.ToString() + ":" + sender.Port;
                 string[] tokens = message.Split('|');
                 switch (tokens[0]) {
-                                  case "coucou":
+                        case "coucou":
                     if (!Clients.ContainsKey(addr)) {
                         Clients.Add(addr, sender);
 
@@ -59,7 +59,7 @@ public class ServerManager : MonoBehaviour
                             else if (team == PongPlayer.PlayerRight) rightTeamCount++;
                         }
 
-                        // Envoyer à tous
+                  
                         string playerCountMessage = $"PLAYER_COUNT|{leftTeamCount}|{rightTeamCount}";
                         BroadcastUDPMessage(playerCountMessage);
 
@@ -83,6 +83,26 @@ public class ServerManager : MonoBehaviour
                         }
                     }
                      break;
+                    case "SCORE_UPDATE":
+                    Debug.Log($"[ADAAAM]{message}");
+                    if (tokens.Length >= 3) {
+                        int leftTeamScore;
+                        int rightTeamScore;
+                        if (int.TryParse(tokens[1], out leftTeamScore) && int.TryParse(tokens[2], out rightTeamScore)) {
+                            Debug.Log($"[SERVER] Updating player Scores - Left: {leftTeamScore}, Right: {rightTeamScore}");
+                            if (PlayerCountDisplay != null) {
+                                PlayerCountDisplay.UpdatePlayerScores(leftTeamScore, rightTeamScore);
+                            } else {
+                                Debug.LogWarning("[SERVER] PlayerCountDisplay is not assigned!");
+                            }
+                        } else {
+                            Debug.LogWarning("[SERVER] Failed to parse scores!");
+                        }
+                    } else {
+                        Debug.LogWarning("[SERVER] SCORE_UPDATE message format is incorrect!");
+                    }
+                    break;
+                  
                      //gérer les cas de déconnection=>MAJ du nombre de joueurs
                     case "DISCONNECT":
                     if (Clients.ContainsKey(addr)) {
@@ -104,7 +124,7 @@ public class ServerManager : MonoBehaviour
                     }
                     break;
                 }
-                //@todo : do something with the message that has arrived! 
+                
             };
     }
 
