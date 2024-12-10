@@ -9,7 +9,7 @@ public class ServerManager : MonoBehaviour
 
     public Dictionary<string, IPEndPoint> Clients = new Dictionary<string, IPEndPoint>(); 
     public Dictionary<string, PongPlayer> PlayerTeams = new Dictionary<string, PongPlayer>();
-    private PongPlayer nextTeam = PongPlayer.PlayerLeft;
+    //private PongPlayer nextTeam = PongPlayer.PlayerLeft;
     public Dictionary<PongPlayer, List<float>> TeamInputs = new Dictionary<PongPlayer, List<float>>();
     public PlayerCountDisplay PlayerCountDisplay;
 
@@ -42,10 +42,10 @@ public class ServerManager : MonoBehaviour
                     if (!Clients.ContainsKey(addr)) {
                         Clients.Add(addr, sender);
 
-                        PongPlayer assignedTeam = nextTeam;
+                        PongPlayer assignedTeam = (tokens[1]=="True")? PongPlayer.PlayerLeft : PongPlayer.PlayerRight;
                         PlayerTeams.Add(addr, assignedTeam);
 
-                        nextTeam = (nextTeam == PongPlayer.PlayerLeft) ? PongPlayer.PlayerRight : PongPlayer.PlayerLeft;
+                        //nextTeam = (nextTeam == PongPlayer.PlayerLeft) ? PongPlayer.PlayerRight : PongPlayer.PlayerLeft;
 
                         Debug.Log("Assigned player " + addr + " to team " + assignedTeam);
 

@@ -4,12 +4,14 @@ using UnityEngine;
 public class ClientManager : MonoBehaviour
 {
     public UDPService UDP;
-    public string ServerIP = "127.0.0.1";
+    public string ServerIP = "127.0.0.1";//192.168.77.65
     public int ServerPort = 25000;
 
     private float NextCoucouTimeout = -1;
     private IPEndPoint ServerEndpoint;
     public PlayerCountDisplay PlayerCountDisplay;
+
+    //public bool leftOrRight = true;
 
 
     void Awake() {
@@ -57,7 +59,7 @@ public class ClientManager : MonoBehaviour
     void Update()
     {
         if (Time.time > NextCoucouTimeout) {
-            UDP.SendUDPMessage("coucou", ServerEndpoint);
+            UDP.SendUDPMessage("coucou|"+Globals.teamChoice, ServerEndpoint);
             NextCoucouTimeout = Time.time + 0.5f;
         }
     }

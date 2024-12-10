@@ -10,4 +10,8 @@ public class MenuUI : MonoBehaviour
     public void StartGame() {
         SceneManager.LoadScene("Pong");
     }
+
+    public void setTeamChoice(bool teamChoice){//True -> Left team | False -> Right team
+        Globals.teamChoice = teamChoice;
+    }
 }
