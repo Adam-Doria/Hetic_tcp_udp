@@ -28,8 +28,6 @@ public class ServerManager : MonoBehaviour
         TeamInputs[PongPlayer.PlayerLeft] = new TeamInputData();
         TeamInputs[PongPlayer.PlayerRight] = new TeamInputData();
 
-        AddServerPlayer();
-
         UDP.OnMessageReceived += (string message, IPEndPoint sender) =>
         {
             string addr = sender.Address.ToString() + ":" + sender.Port;
@@ -52,31 +50,6 @@ public class ServerManager : MonoBehaviour
 
     void Update()
     {
-        if (Globals.IsServer)
-        {
-            // Server can control the left paddle if desired:
-            float leftInput = Input.GetAxis("Vertical");
-            if (leftInput != 0f)
-            {
-                lock (TeamInputs)
-                {
-                    TeamInputs[PongPlayer.PlayerLeft].AddInput(leftInput);
-                }
-            }
-        }
-    }
-
-    private void AddServerPlayer()
-    {
-        Players[nextPlayerId] = new PlayerData
-        {
-            PlayerId = nextPlayerId,
-            Address = null, // no network address for server
-            Team = PongPlayer.PlayerLeft,
-            EndPoint = null
-        };
-        nextPlayerId++;
-        UpdatePlayerCounts();
     }
 
     private void HandleNewPlayer(string addr, string[] tokens, IPEndPoint sender)
