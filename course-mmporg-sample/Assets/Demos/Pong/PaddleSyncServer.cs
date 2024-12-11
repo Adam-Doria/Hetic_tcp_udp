@@ -38,9 +38,9 @@ public class PaddleSyncServer : MonoBehaviour
             Paddle.transform.position = newPos;
 
             // Broadcast position to clients
-            PaddleState state = new PaddleState { Position = Paddle.transform.position };
-            string json = JsonUtility.ToJson(state);
-            string message = $"PADDLE_{Paddle.Player}|{json}";
+            Vector3 pos = Paddle.transform.position;
+            // Format: PADDLE_<Team>|x|y|z
+            string message = $"PADDLE_{Paddle.Player}|{pos.x}|{pos.y}|{pos.z}";
             ServerMan.BroadcastUDPMessage(message);
 
             // Update every 0.03 seconds

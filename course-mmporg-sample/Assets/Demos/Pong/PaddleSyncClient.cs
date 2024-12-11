@@ -19,15 +19,15 @@ public class PaddleSyncClient : MonoBehaviour
             if (!message.StartsWith("PADDLE")) { return; }
 
             string[] tokens = message.Split('|');
-            if (tokens.Length < 2) return;
+            // Format: PADDLE_<Team>|x|y|z
 
-            string paddleId = tokens[0];
-            string json = tokens[1];
-
-            if (paddleId != $"PADDLE_{Paddle.Player}") return;
-
-            PaddleState state = JsonUtility.FromJson<PaddleState>(json);
-            Paddle.transform.position = state.Position;
+            if (tokens.Length == 4 && tokens[0].StartsWith("PADDLE"))
+            {
+                float x = float.Parse(tokens[1]);
+                float y = float.Parse(tokens[2]);
+                float z = float.Parse(tokens[3]);
+                Paddle.transform.position = new Vector3(x, y, z);
+            }
         };
     }
 }
