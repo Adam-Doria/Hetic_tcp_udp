@@ -1,9 +1,7 @@
-using UnityEngine;
-
-public class Globals
+public static class Globals
 {
-    public static bool IsServer = true;
-    public static PongPlayer LocalPlayer;
-
-    public static bool teamChoice = false; //True -> Left team | False -> Right team
+    public static bool IsServer = false;
+    public static PongPlayer LocalPlayer = PongPlayer.None;
+    public static int LocalPlayerId = -1;
+    public static bool teamChoice = true; //True -> Left team | False -> Right team
 }
