@@ -22,11 +22,13 @@ public class ClientManager : MonoBehaviour
 
     void Start()
     {
+        ServerIP = Globals.ServerIP;
         UDP.InitClient();
         ServerEndpoint = new IPEndPoint(IPAddress.Parse(ServerIP), ServerPort);
 
         UDP.OnMessageReceived += (string message, IPEndPoint sender) => {
             Debug.Log("[CLIENT] Message received: " + message);
+            Debug.Log("[client]"+ServerEndpoint);
 
             if (message.StartsWith("welcome")) {
                 string[] tokens = message.Split('|');

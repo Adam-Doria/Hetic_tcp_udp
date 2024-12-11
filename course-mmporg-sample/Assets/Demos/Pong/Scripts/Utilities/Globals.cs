@@ -4,4 +4,5 @@ public static class Globals
     public static PongPlayer LocalPlayer = PongPlayer.None;
     public static int LocalPlayerId = -1;
     public static bool teamChoice = true; //True -> Left team | False -> Right team
+    public static string ServerIP = "127.0.0.1";
 }
