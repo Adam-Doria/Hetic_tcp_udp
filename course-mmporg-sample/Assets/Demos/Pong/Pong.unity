@@ -1524,6 +1524,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LeftPlayerCounter: {fileID: 2104385702}
   RightPlayerCounter: {fileID: 101024521}
+  LeftPlayerScore: {fileID: 1760774489}
+  RightPlayerScore: {fileID: 1622062291}
 --- !u!1 &788302282
 GameObject:
   m_ObjectHideFlags: 0
