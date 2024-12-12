@@ -2045,7 +2045,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UDP: {fileID: 1950999898}
-  ServerIP: 127.0.0.1
+  ServerIP: 172.31.16.148
   ServerPort: 25000
   PlayerCountDisplay: {fileID: 658661984}
 --- !u!1 &1319233851
