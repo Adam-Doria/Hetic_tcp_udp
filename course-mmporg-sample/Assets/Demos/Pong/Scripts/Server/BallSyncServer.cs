@@ -1,41 +1,33 @@
 using UnityEngine;
 
-[System.Serializable]
-public class BallState {
-    public Vector3 Position;
-}
-
-
 public class BallSyncServer : MonoBehaviour
 {
     ServerManager ServerMan;
     float NextUpdateTimeout = -1;
+    PongBall Ball;
 
     void Awake() {
-      if (!Globals.IsServer) {
-        enabled = false;
-      }
-
+        if (!Globals.IsServer) {
+            enabled = false;
+        }
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        ServerMan = FindFirstObjectByType<ServerManager>();
+        ServerMan = FindObjectOfType<ServerManager>();
+        Ball = FindObjectOfType<PongBall>();
     }
 
-    // Update is called once per frame
     void Update()
     {  
         if (Time.time > NextUpdateTimeout) {
-            BallState state = new BallState{
-                Position = transform.position
-            };
+            Vector3 position = transform.position;
+            Vector3 direction = Ball != null ? Ball.GetDirection() : Vector3.right;
+            float speed = Ball != null ? Ball.Speed : 1f;
+            string message = $"UPDATE|{position.x}|{position.y}|{position.z}|{direction.x}|{direction.y}|{direction.z}|{speed}";
 
-            string json = JsonUtility.ToJson(state);
-
-            ServerMan.BroadcastUDPMessage("UPDATE|" + json);
-            NextUpdateTimeout = Time.time + 0.03f;
+            ServerMan.BroadcastUDPMessage(message);
+            NextUpdateTimeout = Time.time + 1.0f; 
         }
     }
 }

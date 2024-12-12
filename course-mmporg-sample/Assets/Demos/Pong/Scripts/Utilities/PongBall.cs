@@ -56,21 +56,25 @@ public class PongBall : MonoBehaviour
         case "BoundTop":
         case "BoundBottom":
           Direction.y = -Direction.y;
+          SendBallPositionUpdate();
           break;
 
         case "PaddleLeft":
         case "PaddleRight":
           Direction.x = -Direction.x;
+          SendBallPositionUpdate();
           break;
 
         case "BoundLeft":
         scoreRight++;
         UpdateScore();
+        SendBallPositionUpdate();
           break;
 
         case "BoundRight":
         scoreLeft++;
         UpdateScore();
+        SendBallPositionUpdate();
           break;
         
 
@@ -98,4 +102,14 @@ public class PongBall : MonoBehaviour
         Speed = 0;
         Direction = Vector3.zero;
     }
+
+     public Vector3 GetDirection() {
+        return Direction;
+    }
+    public void SendBallPositionUpdate() {
+      Vector3 position = transform.position;
+      ServerMan.BroadcastUDPMessage($"UPDATE|{position.x}|{position.y}|{position.z}|{Direction.x}|{Direction.y}|{Direction.z}|{Speed}");
+    }
+
+ 
 }
