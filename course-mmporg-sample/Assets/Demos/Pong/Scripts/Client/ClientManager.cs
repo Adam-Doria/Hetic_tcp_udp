@@ -5,7 +5,7 @@ using System.Net;
 public class ClientManager : MonoBehaviour
 {
     public UDPService UDP;
-    public string ServerIP = "127.0.0.1";
+    public string ServerIP = "172.31.16.148";
     public int ServerPort = 25000;
 
     private float NextCoucouTimeout = -1f;

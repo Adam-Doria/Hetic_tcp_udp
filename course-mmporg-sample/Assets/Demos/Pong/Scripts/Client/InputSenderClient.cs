@@ -12,7 +12,7 @@ public class InputSenderClient : MonoBehaviour
     void Start()
     {
         UDP = FindObjectOfType<UDPService>();
-        ServerEndpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 25000); // Replace with your server IP and port
+        ServerEndpoint = new IPEndPoint(IPAddress.Parse("172.31.16.148"), 25000); // Replace with your server IP and port
 
         inputActions = new PongInput();
         PlayerAction = inputActions.Pong.Player1;

@@ -5,7 +5,7 @@ using System.Net.Sockets;
 public class TCPClient : MonoBehaviour
 {
     public int DestinationPort = 25000;
-    public string DestinationIP = "127.0.0.1";
+    public string DestinationIP = "172.31.16.148";
 
     TcpClient tcp;
     IPEndPoint localEP;
